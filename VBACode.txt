@@ -1,0 +1,1458 @@
+Dim IE As Object
+Private Const READYSTATE_COMPLETE = 4
+Private Const navNoReadFromCache = 4
+Dim thisCon As New ADODB.Connection
+
+Sub ImportFantasyData()
+'
+' ImportFantasyData Macro
+'
+'
+' Created by Wameng Vang on 10/6/2017
+
+' Note -- I added the delay function... so that you can see what is happening on the webpage
+' You can run without if need be
+' But using the delay allow the user to experience the automation
+' Importing Initial Players per team
+'************************************************************************************
+' &&&&&&&&&&&&&&&&&&&&Note: Remove the code for IE 9+ if you have an older version
+'**************************************************************************************
+    Application.ScreenUpdating = False
+
+    Set IE = CreateObject("InternetExplorer.Application")
+    IE.Visible = True
+    'IE.navigate "file:///c:/users/bb/documents/Players.html"
+    IE.navigate "http://thehuddle.com/2017/nfl/nfl-depth-charts.php"
+
+    ' Statusbar let's user know website is loading
+    Application.StatusBar = URL & " is loading. Please wait..."
+ 
+    ' Wait while IE loading...
+    'IE ReadyState = 4 signifies the webpage has loaded (the first loop is set to avoid inadvertently skipping over the second loop)
+    While IE.Busy Or Not (IE.readyState = READYSTATE_COMPLETE)
+        DoEvents
+    Wend
+ 
+    'Webpage Loaded
+    Application.StatusBar = URL & " Loaded"
+    
+    
+    Dim tables 'As MSHTML.HTMLUListElement
+    
+    Dim tbody 'As MSHTML.HTMLListElement
+    Dim child 'As MSHTML.HTMLLIElement
+    Dim td, tr, item, myString, team
+    
+    tables = IE.Document.getElementsByTagName("table")
+    Dim qb, rb, wr, te, k As String
+    Dim count As Integer
+    Dim teamID As Integer
+    teamID = 0
+        
+    Dim cString
+    cString = "Provider=SQLOLEDB.1;Data Source=DESKTOP-LJCJJF1\DEVSQL;Initial Catalog=Football;Integrated Security=SSPI;Persist Security Info=False;"
+    thisCon.Open (cString)
+        
+    For Each child In tables.Children
+        If child.tagName = "TBODY" Then
+            For Each tr In child.Children
+                If tr.tagName = "TR" Then
+                    ' initialize the counts and strings
+                    count = 0
+                    qb = ""
+                    rb = ""
+                    wr = ""
+                    te = ""
+                    k = ""
+                    team = ""
+                    
+                    For Each td In tr.Children
+                        If td.tagName = "TD" Then
+                            For Each item In td.Children
+                                If item.tagName = "A" Or item.tagName = "SPAN" Then
+                                    myString = item.innerText
+                                    If Len(Trim(myString)) > 0 Then
+                                        ' damn apostrophe
+                                        myString = Replace(myString, "'", "''")
+                                        myString = Replace(myString, vbCr, "")
+                                        myString = Replace(myString, vbLf, "")
+                                        
+                                        If count = 1 Then
+                                            'qb = qb + myString + ","
+                                            qb = "Insert Into dbo.Player(Name, PositionType, TeamID)" & vbCrLf _
+                                                & "Select '" & myString & "', 'QB', " & teamID & vbCrLf & vbCrLf
+                                            thisCon.Execute (qb)
+                                        ElseIf count = 2 Then
+                                            'rb = rb + myString + ","
+                                            rb = "Insert Into dbo.Player(Name, PositionType, TeamID)" & vbCrLf _
+                                                & "Select '" & myString & "', 'RB', " & teamID & vbCrLf & vbCrLf
+                                            thisCon.Execute (rb)
+                                        ElseIf count = 3 Then
+                                            'wr = wr + myString + ","
+                                            wr = "Insert Into dbo.Player(Name, PositionType, TeamID)" & vbCrLf _
+                                                & "Select '" & myString & "', 'WR', " & teamID & vbCrLf & vbCrLf
+                                            thisCon.Execute (wr)
+                                        ElseIf count = 4 Then
+                                            'te = te + myString + ","
+                                            te = "Insert Into dbo.Player(Name, PositionType, TeamID)" & vbCrLf _
+                                                & "Select '" & myString & "', 'TE', " & teamID & vbCrLf & vbCrLf
+                                            thisCon.Execute (te)
+                                        ElseIf count = 5 Then
+                                            'k = k + myString + ","
+                                            k = "Insert Into dbo.Player(Name, PositionType, TeamID)" & vbCrLf _
+                                                & "Select '" & myString & "', 'K', " & teamID & vbCrLf & vbCrLf
+                                            thisCon.Execute (k)
+                                        End If
+                                        
+                                    End If
+                                ElseIf item.tagName = "STRONG" Then
+                                    team = item.innerText
+                                    teamID = teamID + 1
+                                End If
+                            Next
+                            count = count + 1
+                        End If
+                    Next
+                    
+                End If
+            Next
+        End If
+    Next
+
+    thisCon.Execute ("Update dbo.Player Set Name = LTRIM(RTRIM(Name))")
+    
+    thisCon.Close
+    
+    Set thisCon = Nothing
+
+    '**********************************************************************
+    Application.StatusBar = "Form Submitted"
+    IE.Quit
+    Set IE = Nothing
+    
+    Application.ScreenUpdating = True
+End Sub
+
+' sub to delay action for 5 seconds
+Private Sub delay(seconds As Long)
+    Dim endTime As Date
+    endTime = DateAdd("s", seconds, Now())
+    Do While Now() < endTime
+        DoEvents
+    Loop
+End Sub
+
+
+Sub aImportPlayerData()
+'
+' ImportPlayerData Macro
+'
+'
+' Created by Wameng Vang on 10/6/2017
+
+' Note -- I added the delay function... so that you can see what is happening on the webpage
+' You can run without if need be
+' But using the delay allow the user to experience the automation
+' Importing Initial Data per Player per team
+'************************************************************************************
+' &&&&&&&&&&&&&&&&&&&&Note: Remove the code for IE 9+ if you have an older version
+'**************************************************************************************
+    
+    Set IE = CreateObject("InternetExplorer.Application")
+    
+    Application.ScreenUpdating = False
+
+Restart:
+    'Dim thisCon As New ADODB.Connection
+    Dim querySet As New ADODB.recordset
+    
+    Dim cString
+    cString = "Provider=SQLOLEDB.1;Data Source=DESKTOP-LJCJJF1\DEVSQL;Initial Catalog=Football;Integrated Security=SSPI;Persist Security Info=False;"
+    thisCon.Open (cString)
+    
+    Dim intYear As Integer
+    Dim doneProcessing As Boolean
+    Dim playerID As Integer, teamID As Integer, playerName As String, positionType As String
+    Dim SQL As String, team As String, maxYear As Integer
+    Dim mostRecentDate As String, week As Integer
+    Dim onlineID As String
+    
+    Dim startID As String
+    
+
+    ' ********************GET the startID*****************
+    ' added position type to process starting with max ID of Defenses
+    'SQL = "exec [dbo].[usp_getNextStartID] @positionType='DST'"
+    'thisCon.Execute (SQL)
+    'querySet.Open SQL, thisCon
+    
+    'startID = Int(querySet("StartID").Value)
+    'querySet.Close
+    
+    ' delete any potential bad records using the start ID....
+    'SQL = "exec [dbo].[usp_deleteBadData] @startID = " & startID
+    'thisCon.Execute (SQL)
+    '********************************************************
+    
+    
+    ' Start from last successful PlayerID
+    'SQL = "Select p.[ID], p.[Name], p.[PositionType], p.[TeamID], t.Name as Team from dbo.Player p join dbo.Team t on p.TeamID = t.ID where p.ID >= " & startID & " order by p.TeamID, p.ID"
+   
+    'testing
+    'SQL = "Select p.[ID], p.[Name], p.[PositionType], p.[TeamID], t.Name as Team from dbo.Player p join dbo.Team t on p.TeamID = t.ID where p.[PositionType] = 'DST' order by p.TeamID, p.ID"
+    'SQL = "Select p.[ID], p.[Name], p.[PositionType], p.[TeamID], t.Name as Team from dbo.Player p join dbo.Team t on p.TeamID = t.ID where p.ID >= " & startID & " and p.[PositionType] = 'DST' order by p.TeamID, p.ID"
+    SQL = "exec dbo.usp_GetPlayerImportList_Staging"
+    'SQL = "exec dbo.usp_GetMaxYear_PlayerList"
+    
+    querySet.Open SQL, thisCon
+    
+
+    On Error GoTo ErrorHandler
+    
+    Dim mycount As Integer
+    mycount = 0
+    
+    Do While (Not querySet.EOF) 'And (mycount < 2)
+        playerID = Int(querySet("ID").Value)
+        teamID = Int(querySet("TeamID").Value)
+        onlineID = querySet("OnlineID").Value
+        team = querySet("TeamName").Value
+        playerName = querySet("PlayerName").Value
+        positionType = querySet("PositionType").Value
+        maxYear = Int(querySet("Year").Value)
+        mostRecentDate = querySet("Date").Value
+        week = Int(querySet("Week").Value)
+        
+        intYear = 2017
+        doneProcessing = False
+        
+        Do
+            ' for now we are ignoring this... we can process all 5 years, regardless, the ifs in the processes take care of etc
+            'If Not (NFLProcess(playerID, teamID, team, positionType, playerName, Trim(Str(intYear)))) Then
+            '    doneProcessing = True
+            'End If
+            
+            ' modified on 10/16/2017
+            Call NFLProcess(playerID, teamID, onlineID, team, positionType, playerName, maxYear, Trim(Str(intYear)), mostRecentDate, week)
+            
+            intYear = intYear - 1
+            'delay (2)
+            
+            
+        Loop Until (intYear < maxYear)  ''we're simply going to process data til 2012
+        mycount = mycount + 1
+        querySet.MoveNext
+        
+        'SQL = "exec [dbo].[usp_LiveTables_update]"
+        'thisCon.Execute (SQL)
+        
+        SQL = "Delete dbo.MissingData where playerID=" & playerID
+        thisCon.Execute (SQL)
+
+    Loop
+    
+    querySet.Close
+    Set querySet = Nothing
+        
+    'SQL = "exec [dbo].[usp_LiveTables_reloadSchedule]"
+    'thisCon.Execute (SQL)
+    
+    thisCon.Close
+    Set thisCon = Nothing
+    
+    IE.Quit
+    
+    
+    Set IE = Nothing
+     
+    Application.ScreenUpdating = True
+    
+    GoTo EndSub
+    
+ErrorHandler:
+    querySet.Close
+    Set querySet = Nothing
+        
+    'SQL = "exec [dbo].[usp_LiveTables_reloadSchedule]"
+    'thisCon.Execute (SQL)
+    
+    thisCon.Close
+    Set thisCon = Nothing
+         
+    GoTo Restart
+    
+EndSub:
+
+End Sub
+
+Private Sub NFLProcess(pID As Integer, pTeamID As Integer, pOnlineID As String, pTeam As String, pType As String, pName As String, ByRef pMaxYear As Integer, pYear As String, pRecentDate As String, pWeek As Integer)
+    
+    ' for next season
+    Dim myOption As HTMLOptionElement
+    Dim indexOption
+    Dim googleURL As String
+    IE.Visible = True
+    Dim testUrl
+    Dim evt, indexFinalDelimiter As Integer
+    Dim selectItem As HTMLSelectElement
+                
+    If pType = "DST" Then
+    
+    
+        If pYear = "2017" Then
+        
+            googleURL = "http://www.foxsports.com/nfl/" & Replace(pName, " ", "-") & "-team-game-log"
+                '?season=2017&category=DEFENSE&seasonType=1"
+            
+            IE.navigate googleURL
+            ' Wait while IE loading...
+            'IE ReadyState = 4 signifies the webpage has loaded (the first loop is set to avoid inadvertently skipping over the second loop)
+            While IE.Busy Or Not (IE.readyState = READYSTATE_COMPLETE)
+                DoEvents
+            Wend
+            
+            Dim divTabs, testItem
+            divTabs = IE.Document.getElementsByClassName("wisbb_toggleButtonContainer").item(0).getElementsByClassName("wisbb_collapsingNav")
+            
+            For Each testItem In divTabs.Children
+                
+                If Trim(testItem.innerText) = "DEFENSE" Then
+                    testUrl = testItem.href
+                    Exit For
+                End If
+                
+            Next
+            
+            
+            If Len(testUrl) < 1 Then
+                'NFLProcess = False
+                'MsgBox "Error Searching for: " & pName
+            Else
+                IE.navigate testUrl
+                While IE.Busy Or Not (IE.readyState = READYSTATE_COMPLETE)
+                    DoEvents
+                Wend
+                
+                'NFLProcess = True
+                delay (5)
+            
+            End If
+        Else
+            ' wait for the defense game log to open
+            While IE.Busy Or Not (IE.readyState = READYSTATE_COMPLETE)
+                DoEvents
+            Wend
+            
+                
+            
+            'NFLProcess = False
+            ' select [next-past] season to load
+            For indexOption = 0 To IE.Document.getElementById("wisbb_ddlseason").Options.Children.Length - 1
+                Set myOption = IE.Document.getElementById("wisbb_ddlseason").Options.Children(indexOption)
+                If myOption.innerText = pYear Then
+                    If (IE.Document.getElementById("wisbb_ddlseason").selectedIndex <> indexOption) Then
+                        IE.Document.getElementById("wisbb_ddlseason").selectedIndex = indexOption
+                        ' NEW CODE FOR IE 9+++ -- added by Wameng Vang
+                        'Dim evt
+                        Set evt = IE.Document.createEvent("HTMLEvents")
+                        evt.initEvent "change", True, False
+                        IE.Document.getElementById("wisbb_ddlseason").dispatchEvent evt
+                    End If
+                    'NFLProcess = True
+                    Exit For
+                End If
+                Set myOption = Nothing
+            Next
+            
+            ' wait for the player game log to open
+            While IE.Busy Or Not (IE.readyState = READYSTATE_COMPLETE)
+                DoEvents
+            Wend
+            
+        End If
+    Else
+
+        If pYear = "2017" Then
+            
+            If Len(pOnlineID) = 0 Then
+                googleURL = "https://www.bing.com" '"https://www.google.com" '/search?espn+nfl+" & Replace(pName, " ", "+")
+                IE.navigate googleURL
+                ' Wait while IE loading...
+                'IE ReadyState = 4 signifies the webpage has loaded (the first loop is set to avoid inadvertently skipping over the second loop)
+                While IE.Busy Or Not (IE.readyState = READYSTATE_COMPLETE)
+                    DoEvents
+                Wend
+                
+                ' "The Chrome Suggestion div...." click i do not want it...
+                'IE.Document.getElementsByClassName("gb_Ba gb_pd gb_9c").item(0).Click
+                
+                ' Google.com site specific
+                'IE.Document.getElementById("lst-ib").Value = "espn nfl" & pName
+                'IE.Document.getElementsByName("btnK").item(0).Click
+                
+                'bing.com.... added pTeam [team name] as of 10/13/2017
+                If pType = "K" Then
+                    ' Kicker data from ESPN is much better than NFL.co  m
+                    IE.Document.getElementById("sb_form_q").Value = "www.espn.com/nfl/player/id gamelog " & pName '& " " & pTeam
+                Else
+                    IE.Document.getElementById("sb_form_q").Value = "www.nfl.com gamelogs " & pName '& " " & pTeam
+                End If
+                
+                IE.Document.getElementById("sb_form_go").Click
+                
+                ' wait for the search button click
+                While IE.Busy Or Not (IE.readyState = READYSTATE_COMPLETE)
+                    DoEvents
+                Wend
+                
+                delay (5)
+                
+                'MsgBox IE.Document.getElementById("sb_form_go")
+                
+                Dim i As Integer
+                
+                
+                ' find the espn link for the player
+                For i = 0 To IE.Document.getElementsByTagName("CITE").Length - 1
+                    testUrl = IE.Document.getElementsByTagName("CITE").item(i).innerText
+                    If pType = "K" Then
+                        If InStr(testUrl, "www.espn.com/nfl/player") > 0 And InStr(testUrl, "id") > 0 Then
+                            testUrl = Mid(testUrl, InStr(testUrl, "www.espn.com"), Len(testUrl) - InStr(testUrl, "www.espn.com") + 1)
+                            
+                            ' removing extra stuff from url
+                            testUrl = Replace(testUrl, "gamelog/", "")
+                            testUrl = Replace(testUrl, "stats/", "")
+                            testUrl = Replace(testUrl, "splits/", "")
+                            testUrl = Replace(testUrl, "photos/", "")
+                            testUrl = Replace(testUrl, "videos/", "")
+                            testUrl = Replace(testUrl, "type/college/", "")
+                            
+                            testUrl = Replace(testUrl, "www.espn.com/nfl/player", "http://www.espn.com/nfl/player/gamelog")
+                            If Len(pOnlineID) = 0 Then
+                                indexFinalDelimiter = InStr(InStr(testUrl, "/id") + 1 + Len("/id"), testUrl, "/")
+                                If (indexFinalDelimiter = 0) Then
+                                    indexFinalDelimiter = Len(testUrl)
+                                End If
+                                pOnlineID = Mid(testUrl, InStr(testUrl, "/id") _
+                                                        + Len("/id") + 1 _
+                                            , indexFinalDelimiter _
+                                                - InStr(testUrl, "/id") _
+                                                - Len("/id") - 1)
+                                
+                                sqlString = "Exec dbo.usp_Player_Put @ID = " & pID _
+                                    & ", @Name = '" & Replace(pName, "'", "''") _
+                                    & "', @PositionType = '" & pType _
+                                    & "', @TeamID = " & pTeamID _
+                                    & ", @OnlineID = '" & pOnlineID & "'" _
+                                    
+                                
+                                ' call the db and execute the insert
+                                thisCon.Execute (sqlString)
+                            
+                            End If
+                            Exit For
+                        End If
+                    Else
+                        If InStr(testUrl, "www.nfl.com/player/") > 0 And InStr(testUrl, Replace(LCase(pName), " ", "")) > 0 Then
+                        
+                            testUrl = Replace(testUrl, "/profile", "/gamelogs")
+                            testUrl = Replace(testUrl, "/careerstats", "/gamelogs")
+                            testUrl = Replace(testUrl, "/gamesplits", "/gamelogs")
+                            testUrl = Replace(testUrl, "/situationalstats", "/gamelogs")
+                            testUrl = Replace(testUrl, "/draft", "/gamelogs")
+                            testUrl = Replace(testUrl, "/combine", "/gamelogs")
+
+                            
+                            'for nfl game log we no longer need the replace, i believe...
+                            If Len(pOnlineID) = 0 Then
+                                indexFinalDelimiter = InStr(InStr(testUrl, Replace(LCase(pName), " ", "")) + 1 _
+                                                + Len(Replace(LCase(pName), " ", "")), testUrl, "/")
+                                
+                                ' this should never be the case here, because there is a gamelog check
+                                If (indexFinalDelimiter = 0) Then
+                                    indexFinalDelimiter = Len(testUrl)
+                                End If
+                                
+                                pOnlineID = Mid(testUrl, InStr(testUrl, Replace(LCase(pName), " ", "")) _
+                                                        + Len(Replace(LCase(pName), " ", "")) + 1 _
+                                            , indexFinalDelimiter _
+                                                - InStr(testUrl, Replace(LCase(pName), " ", "")) _
+                                                - Len(Replace(LCase(pName), " ", "")) - 1)
+                        
+                        
+                                sqlString = "Exec dbo.usp_Player_Put @ID = " & pID _
+                                    & ", @Name = '" & Replace(pName, "'", "''") _
+                                    & "', @PositionType = '" & pType _
+                                    & "', @TeamID = " & pTeamID _
+                                    & ", @OnlineID = '" & pOnlineID & "'" _
+                                    
+                                
+                                ' call the db and execute the insert
+                                thisCon.Execute (sqlString)
+                        
+                        
+                        End If
+                            Exit For
+                        End If
+                    End If
+                    testUrl = ""
+                Next
+                
+                If Len(testUrl) < 1 Then
+                    
+                    Exit Sub
+                    'NFLProcess = False
+                    'MsgBox "Error Searching for: " & pName
+                End If
+            Else
+                ' we do not need to bing the player for the pages
+                ' we can create url here...
+                If pType = "K" Then
+                    testUrl = "http://www.espn.com/nfl/player/gamelog/_/id/" & pOnlineID & "/" & LCase(Replace(pName, " ", "-"))
+                Else
+                    testUrl = "http://www.nfl.com/player/" & LCase(Replace(pName, " ", "")) & "/" & pOnlineID & "/gamelogs"
+                End If
+            End If
+                
+            IE.navigate testUrl
+                    
+            ' wait for the player game log to open
+            While IE.Busy Or Not (IE.readyState = READYSTATE_COMPLETE)
+                DoEvents
+            Wend
+            
+            'Call NFLProcessRawData(pID, pType)
+            'NFLProcess = True
+            
+            delay (5)
+            
+            If (InStr(IE.Document.Title, pName) < 1) And (InStr(IE.Document.Title, Replace(pName, "ven", "phen")) < 1) Then
+                Exit Sub
+            End If
+            
+            ' to get the year
+            If pType = "K" Then
+                Set selectItem = IE.Document.getElementsByTagName("SELECT").item(0)
+            Else
+                Set selectItem = IE.Document.getElementById("season")
+            End If
+                            
+            
+        Else
+            
+            ' wait for the player game log to open
+            While IE.Busy Or Not (IE.readyState = READYSTATE_COMPLETE)
+                DoEvents
+            Wend
+            
+            If (InStr(IE.Document.Title, pName) < 1) And (InStr(IE.Document.Title, Replace(pName, "ven", "phen")) < 1) Then
+                Exit Sub
+            End If
+            
+                
+            'NFLProcess = False
+            If pType = "K" Then
+                Set selectItem = IE.Document.getElementsByTagName("SELECT").item(0)
+            Else
+                Set selectItem = IE.Document.getElementById("season")
+            End If
+            
+            'espn
+            'If Not (IE.Document.getElementsByTagName("SELECT").item(0) Is Nothing) Then
+            If Not (selectItem Is Nothing) Then
+                
+                ' select [next-past] season to load
+                For indexOption = 0 To selectItem.Children.Length - 1 'IE.Document.getElementsByTagName("SELECT").item(0).Options.Children.Length - 1
+                    Set myOption = selectItem.Children(indexOption) 'IE.Document.getElementsByTagName("SELECT").item(0).Options.Children(indexOption)
+                    If myOption.innerText = pYear Then
+                        If (selectItem.selectedIndex <> indexOption) Then '(IE.Document.getElementsByTagName("SELECT").item(0).selectedIndex <> indexOption) Then
+                            selectItem.selectedIndex = indexOption
+                            'IE.Document.getElementsByTagName("SELECT").item(0).selectedIndex = indexOption
+                            
+                            ' NEW CODE FOR IE 9+++ -- added by Wameng Vang
+                            'Dim evt
+                            Set evt = IE.Document.createEvent("HTMLEvents")
+                            evt.initEvent "change", True, False
+                            selectItem.dispatchEvent evt 'IE.Document.getElementsByTagName("SELECT").item(0).dispatchEvent evt
+                        End If
+                        'NFLProcess = True
+                        Exit For
+                    End If
+                    Set myOption = Nothing
+                Next
+                
+                ' wait for the player game log to open
+                While IE.Busy Or Not (IE.readyState = READYSTATE_COMPLETE)
+                    DoEvents
+                Wend
+            End If
+            
+        End If
+                
+        'not defense team
+        ' still handling players
+        
+        
+        If pMaxYear = 0 Then
+            If Not (selectItem Is Nothing) Then
+                ' set the maxyear.... we use this to check through game logs.... how far down the dropdown
+                pMaxYear = Int(Trim(selectItem.Children(selectItem.Children.Length - 1).innerText))
+                If (pMaxYear < 2013) Then
+                    pMaxYear = 2013
+                End If
+            Else
+                ' this means there is no drop-down... so give the player newest year
+                pMaxYear = "2017"
+            End If
+            
+            sqlString = "Exec dbo.usp_Player_Put @ID = " & pID _
+                    & ", @Name = '" & Replace(pName, "'", "''") _
+                    & "', @PositionType = '" & pType _
+                    & "', @TeamID = " & pTeamID _
+                    & ", @OnlineID = '" & pOnlineID _
+                    & "', @MaxYear = " & pMaxYear _
+                    
+                
+            ' call the db and execute the insert
+            thisCon.Execute (sqlString)
+
+        End If
+
+                
+    End If
+    
+    ' wait for the player game log to open
+    While IE.Busy Or Not (IE.readyState = READYSTATE_COMPLETE)
+        DoEvents
+    Wend
+    
+    delay (5)  ''delay here to pause for data writes... tweak this value to your computer speed/internet
+
+    ' Process data here, so that we can handle the drop down postback and the first load
+    ' process the raw data here
+    Call NFLProcessRawData(pID, pTeamID, pType, pRecentDate, pWeek)
+    delay (5)  ''delay here to pause for data writes... tweak this value to your computer speed/internet
+
+End Sub
+
+Private Sub NFLProcessRawData(pID As Integer, pTeamID As Integer, pType As String, pRecentDate As String, pWeek As Integer)
+    If pType = "QB" Then
+        Call NFLProcessQBData(pID, pRecentDate)
+    ElseIf pType = "RB" Then
+        Call NFLProcessRBData(pID, pRecentDate)
+    ElseIf (pType = "WR") Or (pType = "TE") Then
+        Call NFLProcessWRTData(pID, pRecentDate)
+    ElseIf pType = "K" Then
+        Call NFLProcessKData(pID, pRecentDate)
+    Else
+        Call NFLProcessDSTData(pID, pTeamID, pWeek)
+    End If
+End Sub
+
+Private Function getTeamID(pTeamName As String)
+    Select Case pTeamName
+        Case "ARI", "ARZ"
+            getTeamID = 1
+        Case "ATL"
+            getTeamID = 2
+        Case "BAL"
+            getTeamID = 3
+        Case "BUF"
+            getTeamID = 4
+        Case "CAR"
+            getTeamID = 5
+        Case "CHI"
+            getTeamID = 6
+        Case "CIN"
+            getTeamID = 7
+        Case "CLE"
+            getTeamID = 8
+        Case "DAL"
+            getTeamID = 9
+        Case "DEN"
+            getTeamID = 10
+        Case "DET"
+            getTeamID = 11
+        Case "GB"
+            getTeamID = 12
+        Case "HOU"
+            getTeamID = 13
+        Case "IND"
+            getTeamID = 14
+        Case "JAX"
+            getTeamID = 15
+        Case "KC"
+            getTeamID = 16
+        Case "LAC", "SD"
+            getTeamID = 17
+        Case "LA", "LAR", "STL"
+            getTeamID = 18
+        Case "MIA"
+            getTeamID = 19
+        Case "MIN"
+            getTeamID = 20
+        Case "NE"
+            getTeamID = 21
+        Case "NO"
+            getTeamID = 22
+        Case "NYG"
+            getTeamID = 23
+        Case "NYJ"
+            getTeamID = 24
+        Case "OAK"
+            getTeamID = 25
+        Case "PHI"
+            getTeamID = 26
+        Case "PIT"
+            getTeamID = 27
+        Case "SF"
+            getTeamID = 28
+        Case "SEA"
+            getTeamID = 29
+        Case "TB"
+            getTeamID = 30
+        Case "TEN"
+            getTeamID = 31
+        Case "WSH", "WAS"
+            getTeamID = 32
+        Case Else
+            getTeamID = 33
+    End Select
+End Function
+
+' build the schedule id, to be used in SQL Server
+' YYYYMMDDOpponentID
+Private Function buildScheduleID(pYear As Integer, pMonth As Integer, pDay As Integer, pOpponentID As Integer)
+    Dim tempID As String
+    tempID = Str(pYear) & getDate(pMonth, pDay, "")
+    tempID = tempID & Str(pOpponentID)
+    buildScheduleID = Replace(tempID, " ", "")
+End Function
+
+Private Function getDate(pMonth As Integer, pDay As Integer, pDelimiter As String)
+    getDate = ""
+    If pMonth < 10 Then
+        getDate = getDate & "0" & Trim(Str(pMonth)) & pDelimiter
+    Else
+        getDate = getDate & Trim(Str(pMonth)) & pDelimiter
+    End If
+    If pDay < 10 Then
+        getDate = getDate & "0" & Trim(Str(pDay))
+    Else
+        getDate = getDate & Trim(Str(pDay))
+    End If
+End Function
+
+
+Private Sub NFLProcessQBData(pID As Integer, pRecentDate As String)
+    Dim div
+    Dim iYear As Integer, opponent As Integer, passingYards As Integer, rushingAttempt As Integer
+    Dim passingTouchdowns As Integer, interceptions As Integer, rushingYards As Integer
+    Dim rushingTouchdowns As Integer, fumbles As Integer, fumblesLost As Integer
+    Dim comp As Integer, attempt As Integer, pct As Single, rating As Single
+    Dim table, sDate, month As Integer, day As Integer, homeaway, gameURL, gameID As String, scheduleID As String
+    Dim sqlString As String
+        
+    Set table = IE.Document.getElementsByClassName("data-table1").item(1)    'div.item(0).getElementsByClassName("tablehead").item(0)
+    
+    
+    If (table Is Nothing) Then
+        Exit Sub
+    End If
+    
+    If (table.Rows(0).Cells(0).innerText <> "Regular Season") Then
+        Exit Sub
+    End If
+    
+    iYear = Int(Trim(IE.Document.getElementById("season").Value)) 'Int(Mid(table.Rows(0).Cells(0).innerText, 1, InStr(table.Rows(0).Cells(0).innerText, " ")))
+
+    
+    For i = 2 To table.Rows.Length - 1
+        
+        If Len(Trim(table.Rows(i).Cells(0).innerText)) > 0 Then
+        
+            sDate = Trim(table.Rows(i).Cells(1).innerText)
+            
+            If UCase(sDate) <> "BYE" Then
+                month = Int(Mid(sDate, InStr(sDate, " ") + 1, InStr(sDate, "/") - (InStr(sDate, " ") + 1)))
+                day = Int(Mid(sDate, InStr(sDate, "/") + 1, Len(sDate) - InStr(sDate, "/")))
+                
+                ' january games can be week 17 at times
+                Select Case (month)
+                    Case 1:
+                        sDate = getDate(13, day, "/")
+                    Case Else:
+                        sDate = getDate(month, day, "/")
+                End Select
+                
+                ' only process if newer
+                If (sDate > pRecentDate) And (Trim(table.Rows(i).Cells(4).innerText) = "1") Then
+                
+                    cell2 = Trim(table.Rows(i).Cells(2).innerText)
+                    ' @ or VS sign
+                    If InStr(cell2, " ") < 1 Then
+                        homeaway = "VS"
+                    Else
+                        homeaway = Mid(cell2, 1, InStr(cell2, " ") - 1)
+                    End If
+                    
+                    opponent = getTeamID(Mid(cell2, InStr(cell2, " ") + 1, Len(cell2) - InStr(cell2, " "))) 'getTeamID(UCase(table.Rows(i).Cells(2).Children(0).Children(oppItems - 1).innerText))
+                    result = table.Rows(i).Cells(3).innerText
+                                
+                    scheduleID = buildScheduleID(iYear, month, day, opponent)
+                                
+                    ' save this game ID as well... for use with schedule?
+                    If (table.Rows(i).Cells(6).innerText = "--") Then
+                        comp = 0
+                    Else
+                        comp = Int(table.Rows(i).Cells(6).innerText)
+                    End If
+                    
+                    If (table.Rows(i).Cells(7).innerText = "--") Then
+                        attempt = 0
+                    Else
+                        attempt = Int(table.Rows(i).Cells(7).innerText)
+                    End If
+                    
+                    If (table.Rows(i).Cells(8).innerText = "--") Then
+                        pct = 0
+                    Else
+                        pct = CDec(table.Rows(i).Cells(8).innerText)
+                    End If
+                    
+                    If (table.Rows(i).Cells(9).innerText = "--") Then
+                        passingYards = 0
+                    Else
+                        passingYards = Int(table.Rows(i).Cells(9).innerText)
+                    End If
+                    
+                    If (table.Rows(i).Cells(11).innerText = "--") Then
+                        passingTouchdowns = 0
+                    Else
+                        passingTouchdowns = Int(table.Rows(i).Cells(11).innerText)
+                    End If
+                    
+                    If (table.Rows(i).Cells(12).innerText = "--") Then
+                        interceptions = 0
+                    Else
+                        interceptions = Int(table.Rows(i).Cells(12).innerText)
+                    End If
+                    
+                    If (table.Rows(i).Cells(13).innerText = "--") Then
+                        sacks = 0
+                    Else
+                        sacks = Int(table.Rows(i).Cells(13).innerText)
+                    End If
+                    
+                    If (table.Rows(i).Cells(15).innerText = "--") Then
+                        rating = 0
+                    Else
+                        rating = CDec(table.Rows(i).Cells(15).innerText)
+                    End If
+                    
+                    If (table.Rows(i).Cells(16).innerText = "--") Then
+                        rushingAttempt = 0
+                    Else
+                        rushingAttempt = Int(table.Rows(i).Cells(16).innerText)
+                    End If
+                    
+                    If (table.Rows(i).Cells(17).innerText = "--") Then
+                        rushingYards = 0
+                    Else
+                        rushingYards = Int(table.Rows(i).Cells(17).innerText)
+                    End If
+                    
+                    If (table.Rows(i).Cells(19).innerText = "--") Then
+                        rushingTouchdowns = 0
+                    Else
+                        rushingTouchdowns = Int(table.Rows(i).Cells(19).innerText)
+                    End If
+                    
+                    If (table.Rows(i).Cells(20).innerText = "--") Then
+                        fumbles = 0
+                    Else
+                        fumbles = Int(table.Rows(i).Cells(20).innerText)
+                    End If
+                    
+                    If (table.Rows(i).Cells(21).innerText = "--") Then
+                        fumblesLost = 0
+                    Else
+                        fumblesLost = Int(table.Rows(i).Cells(21).innerText)
+                    End If
+                        
+                    ' change to using sproc 10/16/2017
+                    sqlString = "Exec dbo.usp_QBGameLog_Staging_Put @ScheduleID = " _
+                        & "'" & scheduleID & "', @PlayerID = " & pID _
+                        & ", @Comp = " & comp & ", @Attempt = " & attempt & ", @Pct = " & pct _
+                        & ", @PassingYards = " & passingYards _
+                        & ", @PassingTouchdowns = " & passingTouchdowns & ", @Interceptions = " & interceptions _
+                        & ", @Sacks = " & sacks & ", @Rating = " & rating & ", @RushingAttempt = " & rushingAttempt _
+                        & ", @RushingYards = " & rushingYards & ", @RushingTouchdowns = " & rushingTouchdowns _
+                        & ", @Fumbles = " & fumbles & ", @FumblesLost = " & fumblesLost
+                        
+                    ' call the db and execute the insert
+                    thisCon.Execute (sqlString)
+                End If
+            End If
+        End If
+    Next
+    
+End Sub
+
+Private Sub NFLProcessRBData(pID As Integer, pRecentDate As String)
+    Dim div
+    Dim iYear As Integer, opponent As Integer, receivingYards As Integer
+    Dim rushingAttempt As Integer, receptions As Integer, fumblesLost As Integer
+    Dim receivingTouchdowns As Integer, rushingYards As Integer, rushingTouchdowns As Integer, fumbles As Integer
+    Dim table, sDate, month As Integer, day As Integer, homeaway, gameURL, gameID As String, scheduleID As String
+    Dim sqlString As String
+    
+    Set table = IE.Document.getElementsByClassName("data-table1").item(1)    'div.item(0).getElementsByClassName("tablehead").item(0)
+    
+    
+    If (table Is Nothing) Then
+        Exit Sub
+    End If
+    
+    If (table.Rows(0).Cells(0).innerText <> "Regular Season") Then
+        Exit Sub
+    End If
+    
+    iYear = Int(Trim(IE.Document.getElementById("season").Value)) 'Int(Mid(table.Rows(0).Cells(0).innerText, 1, InStr(table.Rows(0).Cells(0).innerText, " ")))
+
+    
+    For i = 2 To table.Rows.Length - 1
+        
+        If Len(Trim(table.Rows(i).Cells(0).innerText)) > 0 Then
+        
+            sDate = Trim(table.Rows(i).Cells(1).innerText)
+            
+            If UCase(sDate) <> "BYE" Then
+                month = Int(Mid(sDate, InStr(sDate, " ") + 1, InStr(sDate, "/") - (InStr(sDate, " ") + 1)))
+                day = Int(Mid(sDate, InStr(sDate, "/") + 1, Len(sDate) - InStr(sDate, "/")))
+                
+                ' january games can be week 17 at times
+                Select Case (month)
+                    Case 1:
+                        sDate = getDate(13, day, "/")
+                    Case Else:
+                        sDate = getDate(month, day, "/")
+                End Select
+                
+                ' only process if newer
+                If (sDate > pRecentDate) And (Trim(table.Rows(i).Cells(4).innerText) = "1") Then
+        
+                    cell2 = Trim(table.Rows(i).Cells(2).innerText)
+                    If InStr(cell2, " ") < 1 Then
+                        homeaway = "VS"
+                    Else
+                        homeaway = Mid(cell2, 1, InStr(cell2, " ") - 1)
+                    End If
+                    
+                    opponent = getTeamID(Mid(cell2, InStr(cell2, " ") + 1, Len(cell2) - InStr(cell2, " "))) 'getTeamID(UCase(table.Rows(i).Cells(2).Children(0).Children(oppItems - 1).innerText))
+                    result = table.Rows(i).Cells(3).innerText
+                                
+                    scheduleID = buildScheduleID(iYear, month, day, opponent)
+                                
+                    ' save this game ID as well... for use with schedule?
+                    If (table.Rows(i).Cells(11).innerText = "--") Then
+                        receptions = 0
+                    Else
+                        receptions = Int(table.Rows(i).Cells(11).innerText)
+                    End If
+                    
+                    If (table.Rows(i).Cells(12).innerText = "--") Then
+                        receivingYards = 0
+                    Else
+                        receivingYards = Int(table.Rows(i).Cells(12).innerText)
+                    End If
+                    
+                    If (table.Rows(i).Cells(15).innerText = "--") Then
+                        receivingTouchdowns = 0
+                    Else
+                        receivingTouchdowns = Int(table.Rows(i).Cells(15).innerText)
+                    End If
+                    
+                    If (table.Rows(i).Cells(6).innerText = "--") Then
+                        rushingAttempt = 0
+                    Else
+                        rushingAttempt = Int(table.Rows(i).Cells(6).innerText)
+                    End If
+                    
+                    If (table.Rows(i).Cells(7).innerText = "--") Then
+                        rushingYards = 0
+                    Else
+                        rushingYards = Int(table.Rows(i).Cells(7).innerText)
+                    End If
+                    
+                    If (table.Rows(i).Cells(10).innerText = "--") Then
+                        rushingTouchdowns = 0
+                    Else
+                        rushingTouchdowns = Int(table.Rows(i).Cells(10).innerText)
+                    End If
+                    
+                    If (table.Rows(i).Cells(16).innerText = "--") Then
+                        fumbles = 0
+                    Else
+                        fumbles = Int(table.Rows(i).Cells(16).innerText)
+                    End If
+                    
+                    If (table.Rows(i).Cells(17).innerText = "--") Then
+                        fumblesLost = 0
+                    Else
+                        fumblesLost = Int(table.Rows(i).Cells(17).innerText)
+                    End If
+                        
+                    ' change to using sproc 10/16/2017
+                    sqlString = "Exec dbo.usp_SkillsGameLog_Staging_Put @ScheduleID = " _
+                        & "'" & scheduleID & "', @PlayerID = " & pID & ", @RushingAttempt = " & rushingAttempt _
+                        & ", @RushingYards = " & rushingYards & ", @RushingTouchdowns = " & rushingTouchdowns _
+                        & ", @Receptions = " & receptions & ", @ReceivingYards = " & receivingYards _
+                        & ", @ReceivingTouchdowns = " & receivingTouchdowns & ", @Fumbles = " & fumbles _
+                        & ", @FumblesLost = " & fumblesLost
+                    
+                    ' call the db and execute the insert
+                    thisCon.Execute (sqlString)
+                End If
+            End If
+        End If
+            
+    Next
+
+End Sub
+
+Private Sub NFLProcessWRTData(pID As Integer, pRecentDate As String)
+    Dim div
+    Dim iYear As Integer, opponent As Integer, receivingYards As Integer
+    Dim rushingAttempt As Integer, receptions As Integer, fumblesLost As Integer
+    Dim receivingTouchdowns As Integer, rushingYards As Integer, rushingTouchdowns As Integer, fumbles As Integer
+    Dim table, sDate, month As Integer, day As Integer, homeaway, gameURL, gameID As String, scheduleID As String
+    Dim sqlString As String
+    
+    Set table = IE.Document.getElementsByClassName("data-table1").item(1)    'div.item(0).getElementsByClassName("tablehead").item(0)
+    
+    
+    If (table Is Nothing) Then
+        Exit Sub
+    End If
+    
+    If (table.Rows(0).Cells(0).innerText <> "Regular Season") Then
+        Exit Sub
+    End If
+    
+    iYear = Int(Trim(IE.Document.getElementById("season").Value)) 'Int(Mid(table.Rows(0).Cells(0).innerText, 1, InStr(table.Rows(0).Cells(0).innerText, " ")))
+
+    
+    For i = 2 To table.Rows.Length - 1
+        
+        If Len(Trim(table.Rows(i).Cells(0).innerText)) > 0 Then
+        
+            sDate = Trim(table.Rows(i).Cells(1).innerText)
+            
+            If UCase(sDate) <> "BYE" Then
+                month = Int(Mid(sDate, InStr(sDate, " ") + 1, InStr(sDate, "/") - (InStr(sDate, " ") + 1)))
+                day = Int(Mid(sDate, InStr(sDate, "/") + 1, Len(sDate) - InStr(sDate, "/")))
+                
+                ' january games can be week 17 at times
+                Select Case (month)
+                    Case 1:
+                        sDate = getDate(13, day, "/")
+                    Case Else:
+                        sDate = getDate(month, day, "/")
+                End Select
+                
+                ' only process if newer
+                If (sDate > pRecentDate) And (Trim(table.Rows(i).Cells(4).innerText) = "1") Then
+        
+                    cell2 = Trim(table.Rows(i).Cells(2).innerText)
+                    If InStr(cell2, " ") < 1 Then
+                        homeaway = "VS"
+                    Else
+                        homeaway = Mid(cell2, 1, InStr(cell2, " ") - 1)
+                    End If
+                    
+                    opponent = getTeamID(Mid(cell2, InStr(cell2, " ") + 1, Len(cell2) - InStr(cell2, " "))) 'getTeamID(UCase(table.Rows(i).Cells(2).Children(0).Children(oppItems - 1).innerText))
+                    result = table.Rows(i).Cells(3).innerText
+                                
+                    scheduleID = buildScheduleID(iYear, month, day, opponent)
+                                
+                    ' save this game ID as well... for use with schedule?
+                    If (table.Rows(i).Cells(6).innerText = "--") Then
+                        receptions = 0
+                    Else
+                        receptions = Int(table.Rows(i).Cells(6).innerText)
+                    End If
+                    
+                    If (table.Rows(i).Cells(7).innerText = "--") Then
+                        receivingYards = 0
+                    Else
+                        receivingYards = Int(table.Rows(i).Cells(7).innerText)
+                    End If
+                    
+                    If (table.Rows(i).Cells(10).innerText = "--") Then
+                        receivingTouchdowns = 0
+                    Else
+                        receivingTouchdowns = Int(table.Rows(i).Cells(10).innerText)
+                    End If
+                    
+                    If (table.Rows(i).Cells(11).innerText = "--") Then
+                        rushingAttempt = 0
+                    Else
+                        rushingAttempt = Int(table.Rows(i).Cells(11).innerText)
+                    End If
+                    
+                    If (table.Rows(i).Cells(12).innerText = "--") Then
+                        rushingYards = 0
+                    Else
+                        rushingYards = Int(table.Rows(i).Cells(12).innerText)
+                    End If
+                    
+                    If (table.Rows(i).Cells(15).innerText = "--") Then
+                        rushingTouchdowns = 0
+                    Else
+                        rushingTouchdowns = Int(table.Rows(i).Cells(15).innerText)
+                    End If
+                    
+                    If (table.Rows(i).Cells(16).innerText = "--") Then
+                        fumbles = 0
+                    Else
+                        fumbles = Int(table.Rows(i).Cells(16).innerText)
+                    End If
+                    
+                    If (table.Rows(i).Cells(17).innerText = "--") Then
+                        fumblesLost = 0
+                    Else
+                        fumblesLost = Int(table.Rows(i).Cells(17).innerText)
+                    End If
+                        
+                    ' change to using sproc 10/16/2017
+                    sqlString = "Exec dbo.usp_SkillsGameLog_Staging_Put @ScheduleID = " _
+                        & "'" & scheduleID & "', @PlayerID = " & pID & ", @RushingAttempt = " & rushingAttempt _
+                        & ", @RushingYards = " & rushingYards & ", @RushingTouchdowns = " & rushingTouchdowns _
+                        & ", @Receptions = " & receptions & ", @ReceivingYards = " & receivingYards _
+                        & ", @ReceivingTouchdowns = " & receivingTouchdowns & ", @Fumbles = " & fumbles _
+                        & ", @FumblesLost = " & fumblesLost
+                    
+                    ' call the db and execute the insert
+                    thisCon.Execute (sqlString)
+                End If
+            End If
+        End If
+            
+    Next
+
+End Sub
+
+Private Sub NFLProcessKData(pID As Integer, pRecentDate As String)
+    Dim div
+    Dim iYear As Integer, opponent As Integer, fg019 As Integer
+    Dim fg2029 As Integer, fg3039 As Integer
+    Dim fg4049 As Integer, fg50 As Integer, fgm As Integer, xpm As Integer
+    Dim table, sDate, month As Integer, day As Integer, homeaway, gameURL, gameID As String, scheduleID As String
+    Dim sqlString As String
+    
+    
+    ' find the div for player stats
+    ' get the table
+    Set div = IE.Document.getElementsByClassName("mod-container mod-table mod-player-stats")
+    
+    ' *****************if there are no items***************
+    If (div.item(0) Is Nothing) Then
+        Exit Sub
+    End If
+    
+    If (div.item(0).getElementsByClassName("tablehead") Is Nothing) Then
+        Exit Sub
+    End If
+    
+    If (div.item(0).getElementsByClassName("tablehead").item(0) Is Nothing) Then
+        Exit Sub
+    End If
+    ' *****************if there are no items***************
+    
+    Set table = div.item(0).getElementsByClassName("tablehead").item(0)
+    
+    If table.Rows.Length - 2 > 0 Then
+        iYear = Int(Mid(table.Rows(0).Cells(0).innerText, 1, InStr(table.Rows(0).Cells(0).innerText, " ")))
+    End If
+    
+    For i = 2 To table.Rows.Length - 1
+        ' works for "trades"
+        ' usually a good indicator there's no data in the row
+        If (InStr(table.Rows(i).Cells(0).innerText, "REGULAR SEASON STATS") < 1) And (table.Rows(i).Cells.Length > 8) Then
+        
+            sDate = table.Rows(i).Cells(0).innerText
+            month = Int(Mid(sDate, InStr(sDate, " ") + 1, InStr(sDate, "/") - (InStr(sDate, " ") + 1)))
+            day = Int(Mid(sDate, InStr(sDate, "/") + 1, Len(sDate) - InStr(sDate, "/")))
+            
+            ' january games can be week 17 at times
+            Select Case (month)
+                Case 1:
+                    sDate = getDate(13, day, "/")
+                Case Else:
+                    sDate = getDate(month, day, "/")
+            End Select
+            
+            ' only process if newer
+            If sDate > pRecentDate Then
+            
+                ' @ or VS sign
+                homeaway = Trim(table.Rows(i).Cells(1).Children(0).Children(0).innerText)
+                ' this to get the opponent regardless if there is a logo or not
+                Dim oppItems
+                oppItems = table.Rows(i).Cells(1).Children(0).Children.Length
+                
+                opponent = getTeamID(UCase(table.Rows(i).Cells(1).Children(0).Children(oppItems - 1).innerText))
+                result = table.Rows(i).Cells(2).innerText
+                            
+                scheduleID = buildScheduleID(iYear, month, day, opponent)
+                            
+                ' save this game ID as well... for use with schedule?
+                'gameURL = LCase(table.Rows(i).Cells(2).Children(1).href)
+                'gameID = Mid(gameURL, InStr(gameURL, "gameid/") + 7, Len(gameURL) - (InStr(gameURL, "gameid/") + 7))
+                
+                ' 0-19 yards, 20-29 yards... made... etc
+                fg019 = table.Rows(i).Cells(3).innerText
+                fg2029 = table.Rows(i).Cells(4).innerText
+                fg3039 = table.Rows(i).Cells(5).innerText
+                fg4049 = table.Rows(i).Cells(6).innerText
+                fg50 = table.Rows(i).Cells(7).innerText
+                
+                tot = table.Rows(i).Cells(8).innerText
+                ' field goal missed get the Attempted - Missed
+                fgm = Int(Mid(tot, InStr(tot, "/") + 1, Len(tot) - InStr(tot, "/"))) - _
+                        Int(Mid(tot, 1, InStr(tot, "/") - 1))
+                
+                ' extra point made
+                xpm = table.Rows(i).Cells(12).innerText
+                
+                ' Build the sql insert statement
+                'sqlString = "Insert Into dbo.KickerGameLog_Staging(ScheduleID, PlayerID, fg019, fg2029" _
+                '    & ", fg3039, fg4049, fg50, fgm, xpm)" & vbCrLf _
+                '    & "Select '" & scheduleID & "', " & pID & ", " & fg019 _
+                '    & ", " & fg2029 & ", " & fg3039 & ", " & fg4049 _
+                '    & ", " & fg50 & ", " & fgm & ", " & xpm & vbCrLf & vbCrLf
+                
+                ' modify using sproc 10/16/2017
+                sqlString = "exec dbo.usp_KickerGameLog_Staging_Put @scheduleID = " _
+                    & "'" & scheduleID & "', @playerID = " & pID & ", @fg019 = " & fg019 _
+                    & ", @fg2029 = " & fg2029 & ", @fg3039 = " & fg3039 & ", @fg4049 = " & fg4049 _
+                    & ", @fg50 = " & fg50 & ", @fgm = " & fgm & ", @xpm = " & xpm
+                    
+                ' call the db and execute the insert
+                thisCon.Execute (sqlString)
+            End If
+        End If
+        
+    Next
+
+End Sub
+
+Private Sub NFLProcessDSTData(pID As Integer, pTeamID As Integer, pWeek As Integer)
+    Dim table, sDate As String, month As Integer, day As Integer, gameURL, gameID As String, scheduleID As String
+    Dim iYear As Integer, opponent As Integer, interceptions As Integer
+    Dim sacks As Integer, fumbles As Integer, intTD As Integer, fumbleTD As Integer, touchdowns As Integer
+    Dim sOpponent As String, sHAIndicator As String
+    Dim sScore As String, myScore As Integer, opponentScore As Integer
+    Dim homeTeamID As Integer, homeScore As Integer, awayTeamID As Integer, awayscore As Integer
+    Dim i As Integer
+    
+    table = IE.Document.getElementsByClassName("wisbb_standardTable")
+    
+    ' notice in foxsports team game log, only one header row
+    For i = 1 To table.Rows.Length - 1
+        result = table.Rows(i).Cells(2).innerText
+        sDate = table.Rows(i).Cells(0).innerHTML
+        ' parse the week and year from the date in cell(0)
+        week = Int(Mid(sDate, InStr(sDate, "week=") + 5, InStr(sDate, """>") - (InStr(sDate, "week=") + 5)))
+        iYear = Int(Mid(sDate, InStr(sDate, "season=") + 7, InStr(sDate, "&amp;seasonType") - (InStr(sDate, "season=") + 7)))
+        
+        sDate = Trim(table.Rows(i).Cells(0).innerText)
+        month = Int(Mid(sDate, 1, InStr(sDate, "/") - 1))
+        day = Int(Mid(sDate, InStr(sDate, "/") + 1, Len(sDate) - InStr(sDate, "/")))
+        
+        If week > pWeek Then
+        
+            ' trim and ucases
+            sOpponent = Trim(UCase(table.Rows(i).Cells(1).innerText))
+            sHAIndicator = Trim(UCase(Mid(sOpponent, 1, InStr(sOpponent, " ") - 1)))
+            ' "@ TEAM"... get the TEAM part and pass it to getTeamID
+            opponent = getTeamID(Mid(sOpponent, InStr(sOpponent, " ") + 1, Len(sOpponent) - InStr(sOpponent, " ")))
+            
+            ' handle no results yet
+            If Len(result) > 0 Then
+                ' trim any excesss space padding, ucase it just in case
+                sScore = Trim(UCase(table.Rows(i).Cells(2).innerText))
+                ' strip the "L/W " from the result
+                sScore = Mid(sScore, InStr(sScore, " ") + 1, Len(sScore) - InStr(sScore, " "))
+                ' "myscore-opponentScore" -- get the myscore part
+                myScore = Int(Mid(sScore, 1, InStr(sScore, "-") - 1))
+                opponentScore = Int(Mid(sScore, InStr(sScore, "-") + 1, Len(sScore) - InStr(sScore, "-")))
+            End If
+                                        
+            ' there was a row with scores, but no results... so added this, to process any missing schedules
+            'If Not (table.Rows(i).Cells.Length > 8 And Len(Trim(table.Rows(i).Cells(7).innerText)) > 0) Then
+                        
+            If table.Rows(i).Cells.Length > 8 And Len(Trim(table.Rows(i).Cells(7).innerText)) > 0 Then
+                ' if there is any defense stats recorded
+                sacks = Int(table.Rows(i).Cells(7).innerText)
+                interceptions = Int(table.Rows(i).Cells(9).innerText)
+                intTD = Int(table.Rows(i).Cells(10).innerText)
+                fumbles = Int(table.Rows(i).Cells(12).innerText)
+                fumbleTD = Int(table.Rows(i).Cells(13).innerText)
+                
+                touchdowns = intTD + fumbleTD
+                scheduleID = buildScheduleID(iYear, month, day, opponent)
+                              
+                ' Build the sql insert statement for the defense game log
+                'sqlString = "Insert Into dbo.DSTGameLog_Staging(ScheduleID, PlayerID, TeamID, Sacks, Fumbles" _
+                '    & ", Interceptions, Touchdowns)" & vbCrLf _
+                '    & "Select '" & scheduleID & "', " & pID & ", " & pTeamID & ", " & sacks _
+                '    & ", " & fumbles & ", " & interceptions & ", " & touchdowns & vbCrLf & vbCrLf
+                
+                ' change sql to using sproc -- 10/16/2017
+                sqlString = "exec dbo.usp_DSTGameLog_Staging_Put @scheduleID = " _
+                    & "'" & scheduleID & "', @playerID = " & pID & ", @teamID = " & pTeamID & ", @sacks = " & sacks _
+                    & ", @fumbles = " & fumbles & ", @interceptions = " & interceptions & ", @touchdowns = " & touchdowns
+                    
+                ' call the db and execute the insert
+                thisCon.Execute (sqlString)
+            End If
+            
+            ' build the sql for schedule
+            If sHAIndicator = "@" Then
+                homeTeamID = opponent
+                awayTeamID = pTeamID
+                homeScore = opponentScore
+                awayscore = myScore
+            Else
+                homeTeamID = pTeamID
+                awayTeamID = opponent
+                homeScore = myScore
+                awayscore = opponentScore
+            End If
+            
+            If Len(result) > 0 Then
+                'sqlString = "Insert Into dbo.Schedule_Staging(Year, Week, Date, HomeTeamID, HomeScore" _
+                '    & ", AwayTeamID, AwayScore)" & vbCrLf _
+                '    & "Select " & iYear & ", " & week & ", '" & sDate _
+                '    & "', " & homeTeamID & ", " & homeScore & ", " & awayTeamID & ", " & awayscore & vbCrLf & vbCrLf
+                
+                ' change sql to using sproc -- 10/16/2017
+                sqlString = "exec [dbo].[usp_Schedule_Staging_Put] @year=" _
+                    & iYear & ", @week=" & week & ", @date='" & sDate _
+                    & "', @homeTeamID=" & homeTeamID & ", @homeScore=" _
+                    & homeScore & ", @awayTeamID=" & awayTeamID & ", @awayScore=" & awayscore
+            
+            Else
+                ' game has not been played
+                'sqlString = "Insert Into dbo.Schedule_Staging(Year, Week, Date, HomeTeamID" _
+                '    & ", AwayTeamID)" & vbCrLf _
+                '    & "Select " & iYear & ", " & week & ", '" & sDate _
+                '    & "', " & homeTeamID & ", " & awayTeamID & vbCrLf & vbCrLf
+                
+                ' change sql to using sproc -- 10/16/2017
+                sqlString = "exec [dbo].[usp_Schedule_Staging_Put] @year=" _
+                    & iYear & ", @week=" & week & ", @date='" & sDate _
+                    & "', @homeTeamID=" & homeTeamID _
+                    & ", @awayTeamID=" & awayTeamID
+            
+            End If
+            ' call the db and execute the insert
+            thisCon.Execute (sqlString)
+        End If
+        'End If
+            
+    Next
+    
+End Sub
+
+'' This function was used to look at game logs at foxsports
+Private Function ProcessQB(pName As String, pYear As String)
+       
+    Dim playerURL As String
+    Dim postData() As Byte
+    
+    playerURL = "http://www.foxsports.com/nfl/" & pName & "-player-game-log" '& "?season=" & pYear
+    
+    Dim selectedValue As String
+    
+    selectedValue = "/nfl/" & pName & "-player-game-log" & "?season=" & pYear
+    
+    'postData = "season=" & pYear
+    
+    'postData = StrConv(postData, vbFromUnicode)
+    'Headers = "Content-Type: application/x-www-form-urlencoded" & _
+            vbCrLf
+    
+    IE.Visible = True
+    
+    If pYear = "2017" Then
+        IE.navigate playerURL
+    Else
+    
+        Dim myOption As HTMLOptionElement
+        Dim indexOption
+        
+        For indexOption = 0 To IE.Document.getElementById("wisbb_ddlseason").Options.Children.Length - 1
+            Set myOption = IE.Document.getElementById("wisbb_ddlseason").Options.Children(indexOption)
+            If myOption.innerText = pYear Then
+                
+                IE.Document.getElementById("wisbb_ddlseason").selectedIndex = indexOption
+                ' NEW CODE FOR IE 9+++ -- added by Wameng Vang
+                Dim evt
+                Set evt = IE.Document.createEvent("HTMLEvents")
+                evt.initEvent "change", True, False
+                IE.Document.getElementById("wisbb_ddlseason").dispatchEvent evt
+                Exit For
+            End If
+        Next
+        
+        
+        
+    End If
+    
+    ' Statusbar let's user know website is loading
+    Application.StatusBar = URL & " is loading. Please wait..."
+ 
+    ' Wait while IE loading...
+    'IE ReadyState = 4 signifies the webpage has loaded (the first loop is set to avoid inadvertently skipping over the second loop)
+    Do While IE.readyState = 4: DoEvents: Loop   'Do While
+    Do Until IE.readyState = 4: DoEvents: Loop   'Do Until
+ 
+    'Webpage Loaded
+    Application.StatusBar = URL & " Loaded"
+
+    Dim table
+    Dim week, year, opponent, passingYards, passingTouchdowns, interceptions, rushingYards, fumbles
+    table = IE.Document.getElementsByClassName("wisbb_standardTable")
+    Dim i As Integer
+    Dim sDate As String
+
+    testString = IE.Document.getElementsByClassName("wisbb_statTableHeader").item(0).innerText
+    If InStr(testString, pYear) = 0 Then
+        ProcessQB = False
+    Else
+        For i = 2 To table.Rows.Length - 2
+            sDate = table.Rows(i).Cells(0).innerHTML
+            week = Int(Mid(sDate, InStr(sDate, "week=") + 5, InStr(sDate, """>") - (InStr(sDate, "week=") + 5)))
+            year = Int(Mid(sDate, InStr(sDate, "season=") + 7, InStr(sDate, "&amp;seasonType") - (InStr(sDate, "season=") + 7)))
+            
+            opponent = table.Rows(i).Cells(1).innerText
+            passingYards = table.Rows(i).Cells(7).innerText
+            passingTouchdowns = table.Rows(i).Cells(8).innerText
+            interceptions = table.Rows(i).Cells(9).innerText
+            rushingYards = table.Rows(i).Cells(11).innerText
+            rushingTouchdowns = table.Rows(i).Cells(12).innerText
+            fumbles = table.Rows(i).Cells(14).innerText
+                            
+        Next
+        ProcessQB = True
+    End If
+' "wisbb_standardTable"
+
+    delay 1
+    '**********************************************************************
+    IE.Visible = False
+End Function
+
