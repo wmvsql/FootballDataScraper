@@ -1,0 +1,1202 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="11/3/2017 9:09:57 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="DESKTOP-LJCJJF1"
+  DTS:CreatorName="DESKTOP-LJCJJF1\BB"
+  DTS:Description="SSIS Package Description"
+  DTS:DTSID="{09942FA2-73A2-4FBC-8B18-62FAC6D86719}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="14.0.0800.90"
+  DTS:LocaleID="1033"
+  DTS:MaxErrorCount="0"
+  DTS:ObjectName="SkillsSproc"
+  DTS:VersionGUID="{DC6E5949-2274-4A99-91EA-A7A3D20BEDF8}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[DestinationConnectionFlatFile]"
+      DTS:CreationName="FLATFILE"
+      DTS:DTSID="{2320FF90-5025-45CA-B120-C24DD7C35BB9}"
+      DTS:ObjectName="DestinationConnectionFlatFile">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:Format="Delimited"
+          DTS:LocaleID="1033"
+          DTS:HeaderRowDelimiter="_x000D__x000A_"
+          DTS:ColumnNamesInFirstDataRow="True"
+          DTS:RowDelimiter=""
+          DTS:TextQualifier="_x003C_none_x003E_"
+          DTS:CodePage="1252"
+          DTS:ConnectionString="C:\Users\BB\Documents\Fantasy Football\Output\SkillsSproc.csv">
+          <DTS:FlatFileColumns>
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="11"
+              DTS:DataType="3"
+              DTS:TextQualified="True"
+              DTS:ObjectName="FPoints"
+              DTS:DTSID="{35DE66A5-A6DA-4D2C-85A5-426623B3DDF5}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="31"
+              DTS:DataType="131"
+              DTS:DataPrecision="38"
+              DTS:TextQualified="True"
+              DTS:ObjectName="TotalAvgPoints"
+              DTS:DTSID="{3E155A4F-A402-49C0-8592-D238A9F4CCA4}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="31"
+              DTS:DataType="131"
+              DTS:DataPrecision="38"
+              DTS:TextQualified="True"
+              DTS:ObjectName="OpponentAvgPoints"
+              DTS:DTSID="{15D4FEF2-8157-4D04-8C00-DD8BF4AECAF5}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="11"
+              DTS:DataType="3"
+              DTS:TextQualified="True"
+              DTS:ObjectName="ScheduleID"
+              DTS:DTSID="{BD958CF9-68E9-4161-BEDB-55370D269ED2}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="11"
+              DTS:DataType="3"
+              DTS:TextQualified="True"
+              DTS:ObjectName="Year"
+              DTS:DTSID="{95C23EBD-F327-481B-BE6F-93442D785B17}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="11"
+              DTS:DataType="3"
+              DTS:TextQualified="True"
+              DTS:ObjectName="Week"
+              DTS:DTSID="{13009236-C681-4B3A-A3BB-A23B8F09A968}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="5"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="Date"
+              DTS:DTSID="{B0389528-607D-4927-BA1A-C9CB9C3ACDC9}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="11"
+              DTS:DataType="3"
+              DTS:TextQualified="True"
+              DTS:ObjectName="OpponentTeamID"
+              DTS:DTSID="{95E63F50-9342-4C3B-B8C5-DD6596884415}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="200"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="Opponent"
+              DTS:DTSID="{A9ED64DB-0A5F-4404-B02D-AB920CB8B207}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="11"
+              DTS:DataType="3"
+              DTS:TextQualified="True"
+              DTS:ObjectName="ID"
+              DTS:DTSID="{F5FC6741-7506-4BB1-BC03-78788436739C}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="100"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="PlayerName"
+              DTS:DTSID="{6426A0AE-AADE-4402-8D56-D10FAA55F8B1}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="25"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="PositionType"
+              DTS:DTSID="{41DA2120-76AB-4108-AFB0-1614AC648ED2}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="11"
+              DTS:DataType="3"
+              DTS:TextQualified="True"
+              DTS:ObjectName="TeamID"
+              DTS:DTSID="{AA896B9E-2CC6-465B-ACFA-4D89717599E2}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="200"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="TeamName"
+              DTS:DTSID="{961E5B3B-DDF7-47CE-8F55-2D38C2617E36}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="11"
+              DTS:DataType="3"
+              DTS:TextQualified="True"
+              DTS:ObjectName="RushingAttempt"
+              DTS:DTSID="{45EF0184-BCF0-485E-BFE3-F09AB60F51FF}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="11"
+              DTS:DataType="3"
+              DTS:TextQualified="True"
+              DTS:ObjectName="RushingYards"
+              DTS:DTSID="{841E0F21-3FAB-4B86-B19A-FCEDB2C316C3}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="11"
+              DTS:DataType="3"
+              DTS:TextQualified="True"
+              DTS:ObjectName="RushingTouchdowns"
+              DTS:DTSID="{D7A959B2-AE2F-45BB-9373-9FF6AF086E4F}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="11"
+              DTS:DataType="3"
+              DTS:TextQualified="True"
+              DTS:ObjectName="Receptions"
+              DTS:DTSID="{E6BB73D1-1AB3-423B-AD38-E1C7668E685F}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="11"
+              DTS:DataType="3"
+              DTS:TextQualified="True"
+              DTS:ObjectName="ReceivingYards"
+              DTS:DTSID="{31C58E0C-C760-4AB9-BBEB-0FF8A52F276D}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="11"
+              DTS:DataType="3"
+              DTS:TextQualified="True"
+              DTS:ObjectName="ReceivingTouchdowns"
+              DTS:DTSID="{E0FC346C-AF5E-452A-A20C-827C86A10D35}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="11"
+              DTS:DataType="3"
+              DTS:TextQualified="True"
+              DTS:ObjectName="Fumbles"
+              DTS:DTSID="{BABD52B1-070F-4846-9E8B-6471813F2474}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="11"
+              DTS:DataType="3"
+              DTS:TextQualified="True"
+              DTS:ObjectName="FumblesLost"
+              DTS:DTSID="{3F9F9A67-FC5C-4FEB-994F-76F3995258EE}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="20"
+              DTS:DataType="20"
+              DTS:TextQualified="True"
+              DTS:ObjectName="AscGameNumber"
+              DTS:DTSID="{7AF94EAC-E08A-4144-A415-38ACB1F8CE67}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="20"
+              DTS:DataType="20"
+              DTS:TextQualified="True"
+              DTS:ObjectName="AllGameNumber"
+              DTS:DTSID="{B2D62AF6-EF2C-4EBC-B4B7-9DA0CEB852E3}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x000D__x000A_"
+              DTS:MaximumWidth="20"
+              DTS:DataType="20"
+              DTS:TextQualified="True"
+              DTS:ObjectName="OpponentGameNumber"
+              DTS:DTSID="{E2060F03-3EE5-4499-9E25-9FE198BC9D64}"
+              DTS:CreationName="" />
+          </DTS:FlatFileColumns>
+        </DTS:ConnectionManager>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[SourceConnectionOLEDB]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{8CC74410-1390-404E-AA70-ECF7BBD79734}"
+      DTS:ObjectName="SourceConnectionOLEDB">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=DESKTOP-LJCJJF1\DEVSQL;Initial Catalog=Football;Provider=SQLNCLI11;Integrated Security=SSPI;Auto Translate=false;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Data Flow Task 1"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:DelayValidation="True"
+      DTS:DTSID="{9BE27EDC-E3EF-46DC-AA46-9539B71D0742}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Data Flow Task 1"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          defaultBufferSize="3145728"
+          version="1">
+          <components>
+            <component
+              refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv"
+              componentClassID="Microsoft.FlatFileDestination"
+              contactInfo="Flat File Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Flat File Destination"
+              localeId="1033"
+              name="Destination - SkillsSproc_csv"
+              validateExternalMetadata="False">
+              <properties>
+                <property
+                  dataType="System.Boolean"
+                  description="Specifies whether the data will overwrite or append to the destination file."
+                  name="Overwrite">true</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the text to write to the destination file before any data is written."
+                  expressionType="Notify"
+                  name="Header"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Connections[FlatFileConnection]"
+                  connectionManagerID="Package.ConnectionManagers[DestinationConnectionFlatFile]"
+                  connectionManagerRefId="Package.ConnectionManagers[DestinationConnectionFlatFile]"
+                  name="FlatFileConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input]"
+                  hasSideEffects="true"
+                  name="Flat File Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].Columns[FPoints]"
+                      cachedDataType="i4"
+                      cachedName="FPoints"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[FPoints]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[FPoints]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].Columns[TotalAvgPoints]"
+                      cachedDataType="numeric"
+                      cachedName="TotalAvgPoints"
+                      cachedPrecision="38"
+                      cachedScale="6"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[TotalAvgPoints]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[TotalAvgPoints]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].Columns[OpponentAvgPoints]"
+                      cachedDataType="numeric"
+                      cachedName="OpponentAvgPoints"
+                      cachedPrecision="38"
+                      cachedScale="6"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[OpponentAvgPoints]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[OpponentAvgPoints]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].Columns[ScheduleID]"
+                      cachedDataType="i4"
+                      cachedName="ScheduleID"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[ScheduleID]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[ScheduleID]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].Columns[Year]"
+                      cachedDataType="i4"
+                      cachedName="Year"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[Year]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[Year]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].Columns[Week]"
+                      cachedDataType="i4"
+                      cachedName="Week"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[Week]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[Week]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].Columns[Date]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="5"
+                      cachedName="Date"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[Date]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[Date]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].Columns[OpponentTeamID]"
+                      cachedDataType="i4"
+                      cachedName="OpponentTeamID"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[OpponentTeamID]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[OpponentTeamID]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].Columns[Opponent]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="200"
+                      cachedName="Opponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[Opponent]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[Opponent]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].Columns[ID]"
+                      cachedDataType="i4"
+                      cachedName="ID"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[ID]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[ID]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].Columns[PlayerName]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="100"
+                      cachedName="PlayerName"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[PlayerName]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[PlayerName]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].Columns[PositionType]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="25"
+                      cachedName="PositionType"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[PositionType]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[PositionType]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].Columns[TeamID]"
+                      cachedDataType="i4"
+                      cachedName="TeamID"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[TeamID]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[TeamID]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].Columns[TeamName]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="200"
+                      cachedName="TeamName"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[TeamName]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[TeamName]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].Columns[RushingAttempt]"
+                      cachedDataType="i4"
+                      cachedName="RushingAttempt"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[RushingAttempt]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[RushingAttempt]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].Columns[RushingYards]"
+                      cachedDataType="i4"
+                      cachedName="RushingYards"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[RushingYards]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[RushingYards]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].Columns[RushingTouchdowns]"
+                      cachedDataType="i4"
+                      cachedName="RushingTouchdowns"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[RushingTouchdowns]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[RushingTouchdowns]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].Columns[Receptions]"
+                      cachedDataType="i4"
+                      cachedName="Receptions"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[Receptions]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[Receptions]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].Columns[ReceivingYards]"
+                      cachedDataType="i4"
+                      cachedName="ReceivingYards"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[ReceivingYards]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[ReceivingYards]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].Columns[ReceivingTouchdowns]"
+                      cachedDataType="i4"
+                      cachedName="ReceivingTouchdowns"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[ReceivingTouchdowns]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[ReceivingTouchdowns]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].Columns[Fumbles]"
+                      cachedDataType="i4"
+                      cachedName="Fumbles"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[Fumbles]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[Fumbles]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].Columns[FumblesLost]"
+                      cachedDataType="i4"
+                      cachedName="FumblesLost"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[FumblesLost]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[FumblesLost]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].Columns[AscGameNumber]"
+                      cachedDataType="i8"
+                      cachedName="AscGameNumber"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[AscGameNumber]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[AscGameNumber]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].Columns[AllGameNumber]"
+                      cachedDataType="i8"
+                      cachedName="AllGameNumber"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[AllGameNumber]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[AllGameNumber]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].Columns[OpponentGameNumber]"
+                      cachedDataType="i8"
+                      cachedName="OpponentGameNumber"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[OpponentGameNumber]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[OpponentGameNumber]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[FPoints]"
+                      dataType="i4"
+                      name="FPoints" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[TotalAvgPoints]"
+                      dataType="numeric"
+                      name="TotalAvgPoints"
+                      precision="38" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[OpponentAvgPoints]"
+                      dataType="numeric"
+                      name="OpponentAvgPoints"
+                      precision="38" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[ScheduleID]"
+                      dataType="i4"
+                      name="ScheduleID" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[Year]"
+                      dataType="i4"
+                      name="Year" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[Week]"
+                      dataType="i4"
+                      name="Week" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[Date]"
+                      codePage="1252"
+                      dataType="str"
+                      length="5"
+                      name="Date" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[OpponentTeamID]"
+                      dataType="i4"
+                      name="OpponentTeamID" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[Opponent]"
+                      codePage="1252"
+                      dataType="str"
+                      length="200"
+                      name="Opponent" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[ID]"
+                      dataType="i4"
+                      name="ID" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[PlayerName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="100"
+                      name="PlayerName" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[PositionType]"
+                      codePage="1252"
+                      dataType="str"
+                      length="25"
+                      name="PositionType" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[TeamID]"
+                      dataType="i4"
+                      name="TeamID" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[TeamName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="200"
+                      name="TeamName" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[RushingAttempt]"
+                      dataType="i4"
+                      name="RushingAttempt" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[RushingYards]"
+                      dataType="i4"
+                      name="RushingYards" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[RushingTouchdowns]"
+                      dataType="i4"
+                      name="RushingTouchdowns" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[Receptions]"
+                      dataType="i4"
+                      name="Receptions" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[ReceivingYards]"
+                      dataType="i4"
+                      name="ReceivingYards" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[ReceivingTouchdowns]"
+                      dataType="i4"
+                      name="ReceivingTouchdowns" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[Fumbles]"
+                      dataType="i4"
+                      name="Fumbles" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[FumblesLost]"
+                      dataType="i4"
+                      name="FumblesLost" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[AscGameNumber]"
+                      dataType="i8"
+                      name="AscGameNumber" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[AllGameNumber]"
+                      dataType="i8"
+                      name="AllGameNumber" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input].ExternalColumns[OpponentGameNumber]"
+                      dataType="i8"
+                      name="OpponentGameNumber" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+            </component>
+            <component
+              refId="Package\Data Flow Task 1\Source - Query"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="Source - Query"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">exec dbo.Usp_Skills_GetRecentOpponentGames</property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Data Flow Task 1\Source - Query.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[SourceConnectionOLEDB]"
+                  connectionManagerRefId="Package.ConnectionManagers[SourceConnectionOLEDB]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[FPoints]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[FPoints]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[FPoints]"
+                      name="FPoints"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[TotalAvgPoints]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[TotalAvgPoints]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[TotalAvgPoints]"
+                      name="TotalAvgPoints"
+                      precision="38"
+                      scale="6"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[OpponentAvgPoints]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[OpponentAvgPoints]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[OpponentAvgPoints]"
+                      name="OpponentAvgPoints"
+                      precision="38"
+                      scale="6"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[ScheduleID]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[ScheduleID]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[ScheduleID]"
+                      name="ScheduleID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[Year]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[Year]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[Year]"
+                      name="Year"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[Week]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[Week]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[Week]"
+                      name="Week"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[Date]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[Date]"
+                      length="5"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[Date]"
+                      name="Date"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[OpponentTeamID]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[OpponentTeamID]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[OpponentTeamID]"
+                      name="OpponentTeamID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[Opponent]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[Opponent]"
+                      length="200"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[Opponent]"
+                      name="Opponent"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[ID]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[ID]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[ID]"
+                      name="ID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[PlayerName]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[PlayerName]"
+                      length="100"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[PlayerName]"
+                      name="PlayerName"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[PositionType]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[PositionType]"
+                      length="25"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[PositionType]"
+                      name="PositionType"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[TeamID]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[TeamID]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[TeamID]"
+                      name="TeamID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[TeamName]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[TeamName]"
+                      length="200"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[TeamName]"
+                      name="TeamName"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[RushingAttempt]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[RushingAttempt]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[RushingAttempt]"
+                      name="RushingAttempt"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[RushingYards]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[RushingYards]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[RushingYards]"
+                      name="RushingYards"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[RushingTouchdowns]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[RushingTouchdowns]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[RushingTouchdowns]"
+                      name="RushingTouchdowns"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[Receptions]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[Receptions]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[Receptions]"
+                      name="Receptions"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[ReceivingYards]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[ReceivingYards]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[ReceivingYards]"
+                      name="ReceivingYards"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[ReceivingTouchdowns]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[ReceivingTouchdowns]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[ReceivingTouchdowns]"
+                      name="ReceivingTouchdowns"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[Fumbles]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[Fumbles]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[Fumbles]"
+                      name="Fumbles"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[FumblesLost]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[FumblesLost]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[FumblesLost]"
+                      name="FumblesLost"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[AscGameNumber]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[AscGameNumber]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[AscGameNumber]"
+                      name="AscGameNumber"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[AllGameNumber]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[AllGameNumber]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[AllGameNumber]"
+                      name="AllGameNumber"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[OpponentGameNumber]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[OpponentGameNumber]"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].Columns[OpponentGameNumber]"
+                      name="OpponentGameNumber"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[FPoints]"
+                      dataType="i4"
+                      name="FPoints" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[TotalAvgPoints]"
+                      dataType="numeric"
+                      name="TotalAvgPoints"
+                      precision="38"
+                      scale="6" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[OpponentAvgPoints]"
+                      dataType="numeric"
+                      name="OpponentAvgPoints"
+                      precision="38"
+                      scale="6" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[ScheduleID]"
+                      dataType="i4"
+                      name="ScheduleID" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[Year]"
+                      dataType="i4"
+                      name="Year" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[Week]"
+                      dataType="i4"
+                      name="Week" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[Date]"
+                      codePage="1252"
+                      dataType="str"
+                      length="5"
+                      name="Date" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[OpponentTeamID]"
+                      dataType="i4"
+                      name="OpponentTeamID" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[Opponent]"
+                      codePage="1252"
+                      dataType="str"
+                      length="200"
+                      name="Opponent" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[ID]"
+                      dataType="i4"
+                      name="ID" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[PlayerName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="100"
+                      name="PlayerName" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[PositionType]"
+                      codePage="1252"
+                      dataType="str"
+                      length="25"
+                      name="PositionType" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[TeamID]"
+                      dataType="i4"
+                      name="TeamID" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[TeamName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="200"
+                      name="TeamName" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[RushingAttempt]"
+                      dataType="i4"
+                      name="RushingAttempt" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[RushingYards]"
+                      dataType="i4"
+                      name="RushingYards" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[RushingTouchdowns]"
+                      dataType="i4"
+                      name="RushingTouchdowns" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[Receptions]"
+                      dataType="i4"
+                      name="Receptions" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[ReceivingYards]"
+                      dataType="i4"
+                      name="ReceivingYards" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[ReceivingTouchdowns]"
+                      dataType="i4"
+                      name="ReceivingTouchdowns" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[Fumbles]"
+                      dataType="i4"
+                      name="Fumbles" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[FumblesLost]"
+                      dataType="i4"
+                      name="FumblesLost" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[AscGameNumber]"
+                      dataType="i8"
+                      name="AscGameNumber" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[AllGameNumber]"
+                      dataType="i8"
+                      name="AllGameNumber" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output].ExternalColumns[OpponentGameNumber]"
+                      dataType="i8"
+                      name="OpponentGameNumber" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[FPoints]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[FPoints]"
+                      name="FPoints" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[TotalAvgPoints]"
+                      dataType="numeric"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[TotalAvgPoints]"
+                      name="TotalAvgPoints"
+                      precision="38"
+                      scale="6" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[OpponentAvgPoints]"
+                      dataType="numeric"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[OpponentAvgPoints]"
+                      name="OpponentAvgPoints"
+                      precision="38"
+                      scale="6" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[ScheduleID]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[ScheduleID]"
+                      name="ScheduleID" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[Year]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[Year]"
+                      name="Year" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[Week]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[Week]"
+                      name="Week" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[Date]"
+                      codePage="1252"
+                      dataType="str"
+                      length="5"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[Date]"
+                      name="Date" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[OpponentTeamID]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[OpponentTeamID]"
+                      name="OpponentTeamID" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[Opponent]"
+                      codePage="1252"
+                      dataType="str"
+                      length="200"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[Opponent]"
+                      name="Opponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[ID]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[ID]"
+                      name="ID" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[PlayerName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="100"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[PlayerName]"
+                      name="PlayerName" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[PositionType]"
+                      codePage="1252"
+                      dataType="str"
+                      length="25"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[PositionType]"
+                      name="PositionType" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[TeamID]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[TeamID]"
+                      name="TeamID" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[TeamName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="200"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[TeamName]"
+                      name="TeamName" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[RushingAttempt]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[RushingAttempt]"
+                      name="RushingAttempt" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[RushingYards]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[RushingYards]"
+                      name="RushingYards" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[RushingTouchdowns]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[RushingTouchdowns]"
+                      name="RushingTouchdowns" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[Receptions]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[Receptions]"
+                      name="Receptions" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[ReceivingYards]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[ReceivingYards]"
+                      name="ReceivingYards" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[ReceivingTouchdowns]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[ReceivingTouchdowns]"
+                      name="ReceivingTouchdowns" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[Fumbles]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[Fumbles]"
+                      name="Fumbles" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[FumblesLost]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[FumblesLost]"
+                      name="FumblesLost" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[AscGameNumber]"
+                      dataType="i8"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[AscGameNumber]"
+                      name="AscGameNumber" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[AllGameNumber]"
+                      dataType="i8"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[AllGameNumber]"
+                      name="AllGameNumber" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[OpponentGameNumber]"
+                      dataType="i8"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[OpponentGameNumber]"
+                      name="OpponentGameNumber" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Data Flow Task 1.Paths[OLE DB Source Output]"
+              endId="Package\Data Flow Task 1\Destination - SkillsSproc_csv.Inputs[Flat File Destination Input]"
+              name="OLE DB Source Output"
+              startId="Package\Data Flow Task 1\Source - Query.Outputs[OLE DB Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+</DTS:Executable>
